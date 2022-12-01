@@ -1,0 +1,10 @@
+function(add_day name)
+    add_executable(${name} ${name}.cpp)
+    target_link_libraries(${name} PRIVATE Microsoft.GSL::GSL)
+endfunction()
+
+foreach(day RANGE 1 1)
+    foreach(p RANGE 1 2)
+        add_day(day${day}_p${p})
+    endforeach()
+endforeach()
