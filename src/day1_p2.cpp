@@ -5,15 +5,15 @@
 #include <string>
 #include <vector>
 
-constexpr auto solve(const std::vector<std::string>& lines) -> int {
+constexpr auto most_calories(const std::vector<std::string>& lines) -> int {
     int sum = 0;
     std::vector<int> h;
     for (const auto& line : lines) {
         if (line.empty()) {
             h.push_back(sum);
-            std::push_heap(h.begin(), h.end(), std::greater());
+            std::ranges::push_heap(h, std::greater<>());
             if (h.size() > 3) {
-                std::pop_heap(h.begin(), h.end(), std::greater());
+                std::ranges::pop_heap(h, std::greater<>());
                 h.pop_back();
             }
             sum = 0;
@@ -37,5 +37,5 @@ auto main() -> int {
             lines.emplace_back(line);
     }
 
-    std::cout << solve(lines) << '\n';
+    std::cout << most_calories(lines) << '\n';
 }

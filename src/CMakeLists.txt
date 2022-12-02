@@ -3,7 +3,7 @@ function(add_day name)
     target_link_libraries(${name} PRIVATE Microsoft.GSL::GSL)
 endfunction()
 
-foreach(day RANGE 1 1)
+foreach(day RANGE 1 2)
     foreach(p RANGE 1 2)
         add_day(day${day}_p${p})
     endforeach()

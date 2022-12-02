@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-constexpr auto solve(const std::vector<std::string>& lines) -> int {
+constexpr auto most_calories(const std::vector<std::string>& lines) -> int {
     int sum = 0;
     int max = 0;
     for (const auto& line : lines) {
@@ -30,5 +30,5 @@ auto main() -> int {
             lines.emplace_back(line);
     }
 
-    std::cout << solve(lines) << '\n';
+    std::cout << most_calories(lines) << '\n';
 }
