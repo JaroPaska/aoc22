@@ -1,3 +1,5 @@
+#include <GSL/assert>
+
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -25,10 +27,7 @@ constexpr auto most_calories(const std::vector<std::string>& lines) -> int {
 
 auto main() -> int {
     std::ifstream ifs("input");
-    if (!ifs) {
-        std::cout << "input not found\n";
-        return 1;
-    }
+    Expects(ifs);
 
     std::vector<std::string> lines;
     {

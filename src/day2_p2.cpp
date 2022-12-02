@@ -1,3 +1,5 @@
+#include <GSL/assert>
+
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -30,10 +32,7 @@ constexpr auto total_score(const std::vector<std::pair<int, int>> &strategy) -> 
 
 auto main() -> int {
     std::ifstream ifs("input");
-    if (!ifs) {
-        std::cout << "input not found\n";
-        return 1;
-    }
+    Expects(ifs);
 
     std::vector<std::pair<int, int>> strategy;
     {
