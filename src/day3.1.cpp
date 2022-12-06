@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <array>
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <string>
@@ -21,7 +20,7 @@ constexpr auto duplicate(std::string_view rucksack) -> char {
     std::sort(mid, s.end());
     std::string o;
     std::set_intersection(s.begin(), mid, mid, s.end(), std::back_inserter(o));
-    Expects(!o.empty());
+    Ensures(!o.empty());
     return o[0];
 }
 
@@ -41,15 +40,11 @@ static_assert(sum_priorities({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMf
 } // namespace tests
 
 auto main() -> int {
-    std::ifstream ifs("input");
-    Expects(ifs);
-
     std::vector<std::string> rucksacks;
     {
         std::string line;
-        while (std::getline(ifs, line))
+        while (std::getline(std::cin, line))
             rucksacks.emplace_back(line);
     }
-
     std::cout << sum_priorities(rucksacks) << '\n';
 }

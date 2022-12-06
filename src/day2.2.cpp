@@ -1,7 +1,4 @@
-#include <GSL/assert>
-
 #include <algorithm>
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <vector>
@@ -37,15 +34,11 @@ static_assert(deduce({{0, 1}, {1, 0}, {2, 2}}) == std::vector<std::pair<int, int
 } // namespace tests
 
 auto main() -> int {
-    std::ifstream ifs("input");
-    Expects(ifs);
-
     std::vector<std::pair<int, int>> strategy;
     {
         char a, x;
-        while (ifs >> a >> x)
+        while (std::cin >> a >> x)
             strategy.emplace_back(a - 'A', x - 'X');
     }
-
     std::cout << total_score(deduce(strategy)) << '\n';
 }

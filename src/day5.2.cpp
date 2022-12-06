@@ -1,10 +1,8 @@
-#include <GSL/assert>
 #include <GSL/narrow>
 
 #include <array>
-#include <fstream>
+#include <cstdio>
 #include <iostream>
-#include <numeric>
 #include <ranges>
 #include <span>
 #include <string>
@@ -14,12 +12,9 @@ auto main() -> int {
     std::vector<std::vector<char>> stacks;
     std::vector<std::array<int, 3>> cmds;
     {
-        std::ifstream ifs("input");
-        Expects(ifs);
-
         std::string line;
         std::vector<std::string> lines;
-        while (std::getline(ifs, line))
+        while (std::getline(std::cin, line))
             lines.emplace_back(line);
 
         auto empty = std::ranges::find(lines, "");
@@ -35,11 +30,11 @@ auto main() -> int {
         std::span cmd_lines(empty + 1, lines.end());
         for (const auto& cmd_line : cmd_lines) {
             const char* data = cmd_line.data();
-            std::array<int, 3> cmd;
-            sscanf_s(data, "move %d from %d to %d", &cmd[0], &cmd[1], &cmd[2]);
-            --cmd[1];
-            --cmd[2];
-            cmds.emplace_back(cmd);
+            int num, from, to;
+            sscanf_s(data, "move %d from %d to %d", &num, &from, &to);
+            --from;
+            --to;
+            cmds.push_back({num, from, to});
         }
     }
 

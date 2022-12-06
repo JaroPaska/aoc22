@@ -1,5 +1,3 @@
-#include <GSL/assert>
-
 #include <array>
 #include <cstdio>
 #include <iostream>
@@ -15,7 +13,7 @@ constexpr auto total_overlap(const std::vector<std::array<std::array<int, 2>, 2>
     return std::transform_reduce(
         elf_pairs.begin(), elf_pairs.end(), 0, std::plus(),
         [](const std::array<std::array<int, 2>, 2>& elf_pair) { return overlap(elf_pair); });
-};
+}
 
 namespace tests {
 
@@ -25,16 +23,11 @@ static_assert(overlap({{{{5, 7}}, {{7, 9}}}}));
 } // namespace tests
 
 auto main() -> int {
-    FILE* f = nullptr;
-    fopen_s(&f, "input", "r");
-    Expects(f);
-
     std::vector<std::array<std::array<int, 2>, 2>> elf_pairs;
     {
-        std::array<std::array<int, 2>, 2> a{};
-        while (fscanf_s(f, "%d-%d,%d-%d", &a[0][0], &a[0][1], &a[1][0], &a[1][1]) == 4)
-            elf_pairs.emplace_back(a);
+        std::array<int, 2> e1, e2;
+        while (scanf_s("%d-%d,%d-%d", &e1[0], &e1[1], &e2[0], &e2[1]) == 4)
+            elf_pairs.push_back({e1, e2});
     }
-
     std::cout << total_overlap(elf_pairs) << '\n';
 }

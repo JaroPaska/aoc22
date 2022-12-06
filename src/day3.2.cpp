@@ -1,9 +1,7 @@
-#include <GSL/assert>
 #include <GSL/narrow>
 
 #include <algorithm>
 #include <array>
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <ranges>
@@ -55,18 +53,14 @@ static_assert(badge({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZs
 } // namespace tests
 
 auto main() -> int {
-    std::ifstream ifs("input");
-    Expects(ifs);
-
     std::vector<std::vector<std::string>> groups;
     {
         std::vector<std::string> group(3);
-        while (std::getline(ifs, group[0])) {
+        while (std::getline(std::cin, group[0])) {
             for (int i = 1; i < 3; ++i)
-                std::getline(ifs, group[i]);
+                std::getline(std::cin, group[i]);
             groups.emplace_back(group);
         }
     }
-
     std::cout << sum_priorities(groups) << '\n';
 }

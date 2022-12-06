@@ -1,6 +1,3 @@
-#include <GSL/assert>
-
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <string>
@@ -19,14 +16,11 @@ static_assert(most_calories({{1000, 2000, 3000}, {4000}, {5000, 6000}, {7000, 80
 } // namespace tests
 
 auto main() -> int {
-    std::ifstream ifs("input");
-    Expects(ifs);
-
     std::vector<std::vector<int>> elves;
     {
         std::string line;
         std::vector<int> elf;
-        while (std::getline(ifs, line)) {
+        while (std::getline(std::cin, line)) {
             if (line.empty()) {
                 elves.emplace_back(elf);
                 elf.clear();
@@ -34,6 +28,5 @@ auto main() -> int {
                 elf.emplace_back(std::stoi(line));
         }
     }
-
     std::cout << most_calories(elves) << '\n';
 }

@@ -1,6 +1,3 @@
-#include <GSL/assert>
-
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <vector>
@@ -27,15 +24,11 @@ static_assert(total_score({{0, 1}, {1, 0}, {2, 2}}) == 15);
 } // namespace tests
 
 auto main() -> int {
-    std::ifstream ifs("input");
-    Expects(ifs);
-
     std::vector<std::pair<int, int>> strategy;
     {
         char a, x;
-        while (ifs >> a >> x)
+        while (std::cin >> a >> x)
             strategy.emplace_back(a - 'A', x - 'X');
     }
-
     std::cout << total_score(strategy) << '\n';
 }
