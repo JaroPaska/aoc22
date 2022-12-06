@@ -1,7 +1,6 @@
-#include <gsl/assert>
-
 #include <algorithm>
 #include <iostream>
+#include <ranges>
 #include <string>
 
 constexpr auto is_marker(std::string s) -> bool {
@@ -10,10 +9,12 @@ constexpr auto is_marker(std::string s) -> bool {
 }
 
 constexpr auto first_marker(std::string_view buffer, int marker_length) -> int {
-    for (int i = marker_length; i <= buffer.size(); ++i)
-        if (is_marker(std::string(buffer.substr(i - marker_length, marker_length))))
-            return i;
-    Ensures(false);
+    // clang-format off
+    return (std::views::iota(marker_length)
+          | std::views::transform([&](int i) { return std::make_pair(i, buffer.substr(i - marker_length, marker_length)); })
+          | std::views::filter([&](const std::pair<int, std::string_view>& p) { return is_marker(std::string(p.second)); })
+          | std::views::take(1)).front().first;
+    // clang-format on
 }
 
 namespace tests {
