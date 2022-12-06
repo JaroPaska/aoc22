@@ -1,7 +1,6 @@
-#include <GSL/assert>
+#include <gsl/assert>
 
 #include <algorithm>
-#include <array>
 #include <iostream>
 #include <numeric>
 #include <string>

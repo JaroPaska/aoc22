@@ -1,4 +1,4 @@
-#include <GSL/narrow>
+#include <gsl/narrow>
 
 #include <array>
 #include <cstdio>
