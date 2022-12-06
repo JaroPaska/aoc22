@@ -1,5 +1,3 @@
-#include <gsl/assert>
-
 #include <algorithm>
 #include <iostream>
 #include <numeric>
@@ -19,8 +17,7 @@ constexpr auto duplicate(std::string_view rucksack) -> char {
     std::sort(mid, s.end());
     std::string o;
     std::set_intersection(s.begin(), mid, mid, s.end(), std::back_inserter(o));
-    Ensures(!o.empty());
-    return o[0];
+    return o.at(0);
 }
 
 constexpr auto sum_priorities(const std::vector<std::string>& rucksacks) -> int {
