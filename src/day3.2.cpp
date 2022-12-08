@@ -44,13 +44,11 @@ constexpr auto sum_priorities(const std::vector<std::vector<std::string>>& group
                                  [](const std::vector<std::string>& group) -> int { return priority(badge(group)); });
 }
 
-namespace tests {
-
-static_assert(priority('p') == 16);
-static_assert(priority('L') == 38);
-static_assert(badge({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg"}) == 'r');
-
-} // namespace tests
+constexpr auto tests() -> void {
+    static_assert(priority('p') == 16);
+    static_assert(priority('L') == 38);
+    static_assert(badge({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg"}) == 'r');
+}
 
 auto main() -> int {
     std::vector<std::vector<std::string>> groups;
