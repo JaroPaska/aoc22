@@ -8,7 +8,7 @@ constexpr auto is_marker(std::string s) -> bool {
     return std::ranges::unique(s).begin() == s.end();
 }
 
-constexpr auto first_marker(std::string_view buffer, int marker_length) -> int {
+constexpr auto first_marker(const std::string& buffer, int marker_length) -> int {
     // clang-format off
     return (std::views::iota(marker_length)
           | std::views::transform([&](int i) { return std::make_pair(i, buffer.substr(i - marker_length, marker_length)); })
@@ -17,13 +17,11 @@ constexpr auto first_marker(std::string_view buffer, int marker_length) -> int {
     // clang-format on
 }
 
-namespace tests {
-
-static_assert(!is_marker("mjqjpqmgbljsph"));
-static_assert(is_marker("qmgbljsphdztnv"));
-static_assert(first_marker("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14) == 19);
-
-} // namespace tests
+constexpr auto tests() -> void {
+    static_assert(!is_marker("mjqjpqmgbljsph"));
+    static_assert(is_marker("qmgbljsphdztnv"));
+    static_assert(first_marker("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14) == 19);
+}
 
 auto main() -> int {
     std::string buffer;

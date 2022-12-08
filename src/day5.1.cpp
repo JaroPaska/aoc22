@@ -31,7 +31,7 @@ auto main() -> int {
         for (const auto& cmd_line : cmd_lines) {
             const char* data = cmd_line.data();
             int num, from, to;
-            sscanf_s(data, "move %d from %d to %d", &num, &from, &to);
+            sscanf(data, "move %d from %d to %d", &num, &from, &to);
             --from;
             --to;
             cmds.push_back({num, from, to});

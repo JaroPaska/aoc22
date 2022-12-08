@@ -15,7 +15,7 @@ constexpr auto total_score(const std::vector<std::pair<int, int>>& strategy) -> 
     return std::transform_reduce(
         strategy.begin(), strategy.end(), 0, std::plus(),
         [](const std::pair<int, int>& round) { return round.second + 1 + static_cast<int>(outcome(round)); });
-};
+}
 
 constexpr auto deduce(const std::vector<std::pair<int, int>>& strategy) -> std::vector<std::pair<int, int>> {
     std::vector<std::pair<int, int>> v;

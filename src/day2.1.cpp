@@ -14,14 +14,12 @@ constexpr auto total_score(const std::vector<std::pair<int, int>>& strategy) -> 
     return std::transform_reduce(
         strategy.begin(), strategy.end(), 0, std::plus(),
         [](const std::pair<int, int>& round) { return round.second + 1 + static_cast<int>(outcome(round)); });
-};
+}
 
-namespace tests {
-
-static_assert(outcome({1, 0}) == Outcome::lose);
-static_assert(total_score({{0, 1}, {1, 0}, {2, 2}}) == 15);
-
-} // namespace tests
+constexpr auto tests() -> void {
+    static_assert(outcome({1, 0}) == Outcome::lose);
+    static_assert(total_score({{0, 1}, {1, 0}, {2, 2}}) == 15);
+}
 
 auto main() -> int {
     std::vector<std::pair<int, int>> strategy;

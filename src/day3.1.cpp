@@ -25,15 +25,13 @@ constexpr auto sum_priorities(const std::vector<std::string>& rucksacks) -> int 
                                  [](std::string_view rucksack) { return priority(duplicate(rucksack)); });
 }
 
-namespace tests {
-
-static_assert(priority('p') == 16);
-static_assert(duplicate("vJrwpWtwJgWrhcsFMMfFFhFp") == 'p');
-static_assert(sum_priorities({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg",
-                              "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", "ttgJtRGJQctTZtZT", "CrZsJsPPZsGzwwsLwLmpwMDw"}) ==
-              157);
-
-} // namespace tests
+constexpr auto tests() -> void {
+    static_assert(priority('p') == 16);
+    static_assert(duplicate("vJrwpWtwJgWrhcsFMMfFFhFp") == 'p');
+    static_assert(sum_priorities({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg",
+                                  "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn", "ttgJtRGJQctTZtZT", "CrZsJsPPZsGzwwsLwLmpwMDw"}) ==
+                  157);
+}
 
 auto main() -> int {
     std::vector<std::string> rucksacks;
