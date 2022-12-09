@@ -1,5 +1,6 @@
 #include <gsl/narrow>
 
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <span>
@@ -34,10 +35,10 @@ constexpr auto simulate(std::span<const int> steps, const std::vector<std::pair<
         return visited;
 
     constexpr std::array<std::pair<int, int>, 4> dirs{{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}};
-    const auto& step = *steps.begin();
-    auto new_knots = knots;
+    const auto& step = steps.front();
+    std::vector<std::pair<int, int>> new_knots(10);
     new_knots.at(0) = add(knots.at(0), dirs.at(step));
-    for (int i = 1; i < knots.size(); ++i)
+    for (int i = 1; i < new_knots.size(); ++i)
         new_knots.at(i) = move_tail(new_knots.at(i - 1), new_knots.at(i));
     if (!contains(visited, new_knots.back()))
         visited.emplace_back(new_knots.back());
@@ -46,8 +47,7 @@ constexpr auto simulate(std::span<const int> steps, const std::vector<std::pair<
 }
 
 constexpr auto covered(const std::vector<int>& steps) -> int {
-    return gsl::narrow<int>(
-        simulate(std::span(steps.begin(), steps.end()), std::vector<std::pair<int, int>>(10, {0, 0}), {{0, 0}}).size());
+    return gsl::narrow_cast<int>(simulate(std::span{steps}, std::vector<std::pair<int, int>>(10), {{0, 0}}).size());
 }
 
 constexpr auto tests() -> void {

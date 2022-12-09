@@ -1,5 +1,6 @@
 #include <gsl/narrow>
 
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <span>
@@ -28,13 +29,13 @@ constexpr auto contains(const std::vector<T>& v, const T& x) -> bool {
     return std::ranges::find(v, x) != std::ranges::end(v);
 }
 
-constexpr auto simulate(std::span<const int> steps, const std::pair<int, int>& head, const std::pair<int, int>& tail,
+constexpr auto simulate(std::span<const int> steps, std::pair<int, int> head, std::pair<int, int> tail,
                         std::vector<std::pair<int, int>>&& visited) -> std::vector<std::pair<int, int>> {
     if (steps.empty())
         return visited;
 
     constexpr std::array<std::pair<int, int>, 4> dirs{{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}};
-    const auto& step = *steps.begin();
+    const auto& step = steps.front();
     auto new_head = add(head, dirs.at(step));
     auto new_tail = move_tail(new_head, tail);
     if (!contains(visited, new_tail))
@@ -44,7 +45,7 @@ constexpr auto simulate(std::span<const int> steps, const std::pair<int, int>& h
 }
 
 constexpr auto covered(const std::vector<int>& steps) -> int {
-    return gsl::narrow<int>(simulate(std::span(steps.begin(), steps.end()), {0, 0}, {0, 0}, {{0, 0}}).size());
+    return gsl::narrow_cast<int>(simulate(std::span{steps}, {0, 0}, {0, 0}, {{0, 0}}).size());
 }
 
 constexpr auto tests() -> void {
