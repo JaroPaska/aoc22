@@ -24,7 +24,7 @@ auto main() -> int {
     std::vector<std::array<std::array<int, 2>, 2>> elf_pairs;
     {
         std::array<int, 2> e1, e2;
-        while (std::scanf("%d-%d,%d-%d", &e1[0], &e1[1], &e2[0], &e2[1]) == 4)
+        while (scanf("%d-%d,%d-%d", &e1[0], &e1[1], &e2[0], &e2[1]) == 4)
             elf_pairs.push_back({e1, e2});
     }
     std::cout << total_overlap(elf_pairs) << '\n';
