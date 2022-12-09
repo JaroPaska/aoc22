@@ -39,7 +39,7 @@ constexpr auto simulate(std::span<const int> steps, const std::pair<int, int>& h
     auto new_tail = move_tail(new_head, tail);
     if (!contains(visited, new_tail))
         visited.emplace_back(new_tail);
-    auto other_steps = std::span(steps.begin() + 1, steps.end());
+    auto other_steps = steps.subspan(1);
     return simulate(other_steps, new_head, new_tail, std::move(visited));
 }
 

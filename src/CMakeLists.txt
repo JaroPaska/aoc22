@@ -1,6 +1,6 @@
 function(add_day name)
     add_executable(${name} ${name}.cpp)
-    set_target_properties(${name} PROPERTIES LINK_FLAGS /STACK:10000000)
+    # set_target_properties(${name} PROPERTIES LINK_FLAGS /STACK:10000000)
     target_link_libraries(${name} PRIVATE Microsoft.GSL::GSL)
 endfunction()
 

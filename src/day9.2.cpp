@@ -41,7 +41,7 @@ constexpr auto simulate(std::span<const int> steps, const std::vector<std::pair<
         new_knots.at(i) = move_tail(new_knots.at(i - 1), new_knots.at(i));
     if (!contains(visited, new_knots.back()))
         visited.emplace_back(new_knots.back());
-    auto other_steps = std::span(steps.begin() + 1, steps.end());
+    auto other_steps = steps.subspan(1);
     return simulate(other_steps, new_knots, std::move(visited));
 }
 
