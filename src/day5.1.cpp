@@ -1,16 +1,41 @@
 #include <gsl/narrow>
 
+#include <algorithm>
 #include <array>
-#include <cstdio>
 #include <iostream>
 #include <ranges>
 #include <span>
 #include <string>
 #include <vector>
 
+using Crate = char;
+using Stack = std::vector<Crate>;
+using Cmd = std::array<int, 3>;
+
+constexpr auto rearrange(std::vector<Stack>&& stacks, const std::vector<Cmd>& cmds) -> std::vector<Stack> {
+    for (const auto& cmd : cmds) {
+        const auto& [num, from, to] = cmd;
+        std::reverse(stacks[from].end() - num, stacks[from].end());
+        stacks[to].insert(stacks[to].end(), stacks[from].end() - num, stacks[from].end());
+        stacks[from].erase(stacks[from].end() - num, stacks[from].end());
+    }
+    return stacks;
+}
+
+constexpr auto top_crates(const std::vector<Stack>& stacks) -> std::vector<char> {
+    auto top = stacks | std::views::transform([](const Stack& stack) { return stack.back(); });
+    return std::vector<char>(top.begin(), top.end());
+}
+
+constexpr auto tests() -> void {
+    static_assert(rearrange({{'Z', 'N', 'D'}, {'M', 'C'}, {'P'}}, {{3, 0, 2}}) ==
+                  std::vector<Stack>{{}, {'M', 'C'}, {'P', 'D', 'N', 'Z'}});
+    static_assert(top_crates({{'Z', 'N'}, {'M', 'C', 'D'}, {'P'}}) == std::vector<char>{'N', 'D', 'P'});
+}
+
 auto main() -> int {
-    std::vector<std::vector<char>> stacks;
-    std::vector<std::array<int, 3>> cmds;
+    std::vector<Stack> stacks;
+    std::vector<Cmd> cmds;
     {
         std::string line;
         std::vector<std::string> lines;
@@ -21,7 +46,7 @@ auto main() -> int {
         std::span stack_lines(lines.begin(), empty - 1);
         stacks.resize((stack_lines[0].size() + 1) / 4);
         for (int r = gsl::narrow_cast<int>(stack_lines.size()) - 1; r >= 0; --r)
-            for (int c = 0; c < gsl::narrow_cast<int>(stack_lines[r].size()); ++c)
+            for (int c = 0; c < stack_lines[r].size(); ++c)
                 if (isupper(stack_lines[r][c])) {
                     int s = (c - 1) / 4;
                     stacks[s].emplace_back(stack_lines[r][c]);
@@ -37,17 +62,6 @@ auto main() -> int {
             cmds.push_back({num, from, to});
         }
     }
-
-    for (const auto& cmd : cmds) {
-        const auto& [num, from, to] = cmd;
-        for (int i = 0; i < num; ++i) {
-            stacks[to].emplace_back(stacks[from].back());
-            stacks[from].pop_back();
-        }
-    }
-
-    auto res = stacks | std::views::transform([](const std::vector<char>& stack) { return stack.back(); });
-    for (const auto& c : res)
-        std::cout << c;
-    std::cout << '\n';
+    auto top = top_crates(rearrange(std::move(stacks), cmds));
+    std::cout << std::string(top.begin(), top.end()) << '\n';
 }
