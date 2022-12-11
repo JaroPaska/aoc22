@@ -14,8 +14,10 @@ using Cmd = std::array<int, 3>;
 constexpr auto rearrange(std::vector<Stack>&& stacks, const std::vector<Cmd>& cmds) -> std::vector<Stack> {
     for (const auto& cmd : cmds) {
         const auto& [num, from, to] = cmd;
-        stacks[to].insert(stacks[to].end(), stacks[from].end() - num, stacks[from].end());
-        stacks[from].erase(stacks[from].end() - num, stacks[from].end());
+        auto first = stacks[from].end() - num;
+        auto last = stacks[from].end();
+        stacks[to].insert(stacks[to].end(), first, last);
+        stacks[from].erase(first, last);
     }
     return stacks;
 }
