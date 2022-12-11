@@ -1,36 +1,50 @@
+#include <gsl/narrow>
+
 #include <array>
 #include <iostream>
-#include <numeric>
 #include <string>
 #include <vector>
 
-constexpr auto all_visible(const std::vector<std::string>& grid) -> int {
-    int max = 0;
-    for (int i = 0; i < grid.size(); ++i) {
-        for (int j = 0; j < grid.at(0).size(); ++j) {
-            std::array<int, 4> dy{-1, 0, 1, 0};
-            std::array<int, 4> dx{0, 1, 0, -1};
-            int p = 1;
-            for (int k = 0; k < 4; ++k) {
-                int s = 0;
-                int y = i + dy[k];
-                int x = j + dx[k];
-                while (y >= 0 && y < grid.size() && x >= 0 && x < grid.at(0).size()) {
-                    ++s;
-                    if (grid.at(y).at(x) >= grid.at(i).at(j))
-                        break;
-                    y = y + dy[k];
-                    x = x + dx[k];
-                }
-                p *= s;
-            }
-            max = std::max(max, p);
-        }
+constexpr auto smaller_trees(const std::vector<std::string>& grid, int r, int c, int di) -> int {
+    constexpr std::array<int, 4> dr{-1, 0, 1, 0};
+    constexpr std::array<int, 4> dc{0, 1, 0, -1};
+    int nr = r + dr.at(di);
+    int nc = c + dc.at(di);
+    int cnt = 0;
+    while (nr >= 0 && nr < grid.size() && nc >= 0 && nc < grid.at(0).size() && grid.at(nr).at(nc) < grid.at(r).at(c)) {
+        nr += dr.at(di);
+        nc += dc.at(di);
+        ++cnt;
     }
+    return cnt;
+}
+
+constexpr auto trees(const std::vector<std::string>& grid, int r, int c) -> std::array<int, 4> {
+    return {r, gsl::narrow_cast<int>(grid.at(0).size()) - 1 - c, gsl::narrow_cast<int>(grid.size()) - 1 - r, c};
+}
+
+constexpr auto max_score(const std::vector<std::string>& grid) -> int {
+    auto score = [&](int r, int c) {
+        auto t = trees(grid, r, c);
+        int p = 1;
+        for (int di = 0; di < 4; ++di) {
+            int s = smaller_trees(grid, r, c, di);
+            p *= s + (s < t.at(di));
+        }
+        return p;
+    };
+
+    int max = 0;
+    for (int r = 0; r < grid.size(); ++r)
+        for (int c = 0; c < grid.at(0).size(); ++c)
+            max = std::max(max, score(r, c));
     return max;
 }
 
-constexpr auto tests()  {
+constexpr auto tests() {
+    static_assert(smaller_trees({"30373", "25512", "65332", "33549", "35390"}, 2, 1, 1) == 3);
+    static_assert(trees({"30373", "25512", "65332", "33549", "35390"}, 2, 1) == std::array{2, 3, 2, 1});
+    static_assert(max_score({"30373", "25512", "65332", "33549", "35390"}) == 8);
 }
 
 auto main() -> int {
@@ -40,5 +54,5 @@ auto main() -> int {
         while (std::getline(std::cin, line))
             grid.emplace_back(line);
     }
-    std::cout << all_visible(grid) << '\n';
+    std::cout << max_score(grid) << '\n';
 }
