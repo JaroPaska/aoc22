@@ -36,7 +36,7 @@ constexpr auto badge(const std::vector<std::string>& group) -> char {
     std::ranges::transform(group, std::back_inserter(masks),
                            [](std::string_view rucksack) { return bitmask(rucksack); });
     auto mask = intersect(masks);
-    return gsl::narrow_cast<char>(std::ranges::distance(mask.begin(), std::ranges::find(mask, 1)));
+    return gsl::narrow_cast<char>(std::ranges::distance(mask.begin(), std::ranges::find(mask, true)));
 }
 
 constexpr auto sum_priorities(const std::vector<std::vector<std::string>>& groups) -> int {
