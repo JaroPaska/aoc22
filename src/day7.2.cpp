@@ -7,28 +7,6 @@
 #include <variant>
 #include <vector>
 
-struct Dir {
-    std::string name;
-};
-
-struct File {
-    int size;
-    std::string name;
-};
-
-using Entry = std::variant<Dir, File>;
-
-struct ListCmd {
-    std::vector<Entry> entries;
-};
-
-struct CdCmd {
-    std::string where;
-};
-
-using Cmd = std::variant<ListCmd, CdCmd>;
-using Path = std::vector<std::string>;
-
 template<class T1, class T2>
 struct map {
     std::vector<std::pair<T1, T2>> vec;
@@ -42,6 +20,26 @@ struct map {
         return vec.back().second;
     }
 };
+
+struct Dir {
+    std::string name;
+};
+
+struct File {
+    int size;
+    std::string name;
+};
+
+struct Ls {
+    std::vector<std::variant<Dir, File>> entries;
+};
+
+struct Cd {
+    std::string where;
+};
+
+using Cmd = std::variant<Ls, Cd>;
+using Path = std::vector<std::string>;
 
 struct Metadata {
     map<Path, int> own_sizes;
@@ -59,32 +57,36 @@ constexpr auto change_dir(Path path, std::string_view where) -> Path {
     return path;
 }
 
+template<class... Ts>
+struct overloaded : Ts ... {
+    using Ts::operator()...;
+};
+
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
 constexpr auto process(Path path, std::span<const Cmd> cmds, Metadata &&metadata) -> Metadata {
     if (cmds.empty())
         return metadata;
 
     const auto &cmd = cmds.front();
-    if (std::holds_alternative<ListCmd>(cmd)) {
-        const auto &list_cmd = std::get<ListCmd>(cmd);
-        auto &[own_sizes, folders, _] = metadata;
-        auto &own_size = own_sizes[path];
-        auto &my_folders = folders[path];
-        own_size = 0;
-        my_folders.clear();
-        for (const auto &entry: list_cmd.entries) {
-            if (std::holds_alternative<Dir>(entry)) {
-                const auto &dir = std::get<Dir>(entry);
-                my_folders.emplace_back(dir.name);
-            } else {
-                const auto &file = std::get<File>(entry);
-                own_size += file.size;
+    metadata = std::visit(overloaded{
+            [&](const Ls &ls) {
+                auto &[own_sizes, folders, _] = metadata;
+                auto &own_size = own_sizes[path];
+                auto &my_folders = folders[path];
+                own_size = 0;
+                my_folders.clear();
+                for (const auto &entry: ls.entries)
+                    std::visit(overloaded{
+                            [&](const Dir &dir) { my_folders.emplace_back(dir.name); },
+                            [&](const File &file) { own_size += file.size; }
+                    }, entry);
+                return process(path, cmds.subspan(1), std::move(metadata));
+            },
+            [&](const Cd &cd) {
+                return process(change_dir(path, cd.where), cmds.subspan(1), std::move(metadata));
             }
-        }
-        metadata = process(path, cmds.subspan(1), std::move(metadata));
-    } else {
-        const auto &cd_cmd = std::get<CdCmd>(cmd);
-        metadata = process(change_dir(path, cd_cmd.where), cmds.subspan(1), std::move(metadata));
-    }
+    }, cmd);
     auto &[own_sizes, folders, total_sizes] = metadata;
     total_sizes[path] = own_sizes[path];
     for (const auto &folder: folders[path]) {
@@ -110,11 +112,11 @@ constexpr auto tests() -> void {
     static_assert(change_dir(Path{}, "a") == Path{"a"});
     static_assert(
             smallest_big_dir(
-                    {CdCmd{"/"}, ListCmd{{Dir{"a"}, File{14848514, "b.txt"}, File{8504156, "c.dat"}, Dir{"d"}}},
-                     CdCmd{"a"}, ListCmd{{Dir{"e"}, File{29116, "f"}, File{2557, "g"}, File{62596, "h.lst"}}},
-                     CdCmd{"e"}, ListCmd{{File{584, "i"}}}, CdCmd{".."}, CdCmd{".."}, CdCmd{"d"},
-                     ListCmd{{File{4060174, "j"}, File{8033020, "d.log"}, File{5626152, "d.ext"},
-                              File{7214296, "k"}}}}) == 24933642);
+                    {Cd{"/"}, Ls{{Dir{"a"}, File{14848514, "b.txt"}, File{8504156, "c.dat"}, Dir{"d"}}},
+                     Cd{"a"}, Ls{{Dir{"e"}, File{29116, "f"}, File{2557, "g"}, File{62596, "h.lst"}}},
+                     Cd{"e"}, Ls{{File{584, "i"}}}, Cd{".."}, Cd{".."}, Cd{"d"},
+                     Ls{{File{4060174, "j"}, File{8033020, "d.log"}, File{5626152, "d.ext"},
+                         File{7214296, "k"}}}}) == 24933642);
 }
 
 auto main() -> int {
@@ -130,11 +132,11 @@ auto main() -> int {
         for (const auto &line: lines) {
             if (line.starts_with("$")) {
                 if (line == "$ ls")
-                    cmds.emplace_back(ListCmd{});
+                    cmds.emplace_back(Ls{});
                 else
-                    cmds.emplace_back(CdCmd{line.substr(5)});
+                    cmds.emplace_back(Cd{line.substr(5)});
             } else {
-                auto &ls = std::get<ListCmd>(cmds.back());
+                auto &ls = std::get<Ls>(cmds.back());
                 if (line.starts_with("dir"))
                     ls.entries.emplace_back(Dir{line.substr(4)});
                 else {
