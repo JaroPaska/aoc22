@@ -1,5 +1,6 @@
+#include <gsl/narrow>
+
 #include <algorithm>
-#include <array>
 #include <compare>
 #include <iostream>
 #include <optional>
@@ -14,9 +15,8 @@ constexpr auto operator<=>(const std::variant<int, List>& l, const std::variant<
 struct List {
     std::vector<std::variant<int, List>> elements;
     constexpr auto operator<=>(const List& other) const -> std::strong_ordering = default;
+    constexpr auto operator<=>(int n) const -> std::strong_ordering { return *this <=> List{{n}}; }
 };
-
-constexpr auto operator<=>(const List& l, int r) -> std::strong_ordering { return l <=> List{{r}}; }
 
 constexpr auto operator<=>(const std::variant<int, List>& l, const std::variant<int, List>& r) -> std::strong_ordering {
     return std::visit([&](auto&& lv) { return std::visit([&](auto&& rv) { return lv <=> rv; }, r); }, l);
@@ -53,11 +53,13 @@ auto parse(std::string_view line, const std::vector<std::optional<int>>& rb, int
     return list;
 }
 
-constexpr auto decoder_key(std::vector<List>&& lists) -> int {
+constexpr auto decoder_key(std::vector<List>&& lists) {
+    lists.emplace_back(List{{List{{2}}}});
+    lists.emplace_back(List{{List{{6}}}});
     std::ranges::sort(lists);
-    int p1 = std::ranges::distance(std::ranges::begin(lists), std::ranges::find(lists, List{{List{{2}}}}));
-    int p2 = std::ranges::distance(std::ranges::begin(lists), std::ranges::find(lists, List{{List{{6}}}}));
-    return p1 * p2;
+    auto p1 = std::ranges::distance(std::ranges::begin(lists), std::ranges::find(lists, List{{List{{2}}}}));
+    auto p2 = std::ranges::distance(std::ranges::begin(lists), std::ranges::find(lists, List{{List{{6}}}}));
+    return (p1 + 1) * (p2 + 1);
 }
 
 constexpr auto tests() -> void {
@@ -74,7 +76,7 @@ auto main() -> int {
         while (std::getline(std::cin, line)) {
             if (line.empty())
                 continue;
-            lists.push_back(parse(line, match_brackets(line), 0, line.size() - 1));
+            lists.push_back(parse(line, match_brackets(line), 0, gsl::narrow_cast<int>(line.size()) - 1));
         }
     }
     std::cout << decoder_key(std::move(lists)) << '\n';

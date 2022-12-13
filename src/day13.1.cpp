@@ -1,3 +1,5 @@
+#include <gsl/narrow>
+
 #include <array>
 #include <compare>
 #include <iostream>
@@ -7,30 +9,17 @@
 #include <variant>
 #include <vector>
 
-struct List {
-    std::vector<std::variant<int, List>> elements;
-};
-
+struct List;
 constexpr auto operator<=>(const std::variant<int, List>& l, const std::variant<int, List>& r) -> std::strong_ordering;
 
-constexpr auto operator<=>(const List& l, const List& r) -> std::strong_ordering {
-    return l.elements <=> r.elements;
-}
-
-constexpr auto operator<=>(int l, const List& r) -> std::strong_ordering {
-    return List{{l}} <=> r;
-}
-
-constexpr auto operator<=>(const List& l, int r) -> std::strong_ordering {
-    return l <=> List{{r}};
-}
+struct List {
+    std::vector<std::variant<int, List>> elements;
+    constexpr auto operator<=>(const List& other) const -> std::strong_ordering = default;
+    constexpr auto operator<=>(int n) const -> std::strong_ordering { return *this <=> List{{n}}; }
+};
 
 constexpr auto operator<=>(const std::variant<int, List>& l, const std::variant<int, List>& r) -> std::strong_ordering {
-    return std::visit([&](auto&& lv) {
-        return std::visit([&](auto&& rv) {
-            return lv <=> rv;
-        }, r);
-    }, l);
+    return std::visit([&](auto&& lv) { return std::visit([&](auto&& rv) { return lv <=> rv; }, r); }, l);
 }
 
 constexpr auto match_brackets(std::string_view line) -> std::vector<std::optional<int>> {
@@ -67,14 +56,14 @@ auto parse(std::string_view line, const std::vector<std::optional<int>>& rb, int
 constexpr auto sum_indices(const std::vector<std::array<List, 2>>& lists) {
     int s = 0;
     for (int i = 0; i < lists.size(); ++i)
-        if (lists[i][0] <= lists[i][1])
+        if (lists.at(i).at(0) <= lists.at(i).at(1))
             s += i + 1;
     return s;
 }
 
 constexpr auto tests() -> void {
     static_assert(List{{1, 1, 3, 1, 1}} < List{{1, 1, 5, 1, 1}});
-    static_assert(std::is_eq(List{{List{{1}}}} <=> List{{List{{1}}}}));
+    static_assert(List{{List{{1}}}} == List{{List{{1}}}});
     static_assert(List{{List{{1}}, List{{2, 3, 4}}}} < List{{List{{1}}, 4}});
     static_assert(List{{9}} > List{{List{{8, 7, 6}}}});
 }
@@ -84,10 +73,10 @@ auto main() -> int {
     {
         std::string line;
         while (std::getline(std::cin, line)) {
-            auto list = parse(line, match_brackets(line), 0, line.size() - 1);
+            auto list = parse(line, match_brackets(line), 0, gsl::narrow_cast<int>(line.size()) - 1);
 
             std::getline(std::cin, line);
-            lists.push_back({list, parse(line, match_brackets(line), 0, line.size() - 1)});
+            lists.push_back({list, parse(line, match_brackets(line), 0, gsl::narrow_cast<int>(line.size()) - 1)});
 
             std::getline(std::cin, line);
         }
