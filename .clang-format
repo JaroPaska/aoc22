@@ -1,4 +1,5 @@
 AlignConsecutiveMacros: None
+AlignOperands: AlignAfterOperator
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Attach
 ColumnLimit: 120
