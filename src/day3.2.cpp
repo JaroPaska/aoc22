@@ -33,15 +33,18 @@ constexpr auto intersect(const std::vector<std::array<bool, chars>>& masks) -> s
 
 constexpr auto badge(const std::vector<std::string>& group) -> char {
     std::vector<std::array<bool, chars>> masks;
-    std::ranges::transform(group, std::back_inserter(masks),
-                           [](std::string_view rucksack) { return bitmask(rucksack); });
+    std::ranges::transform(group, std::back_inserter(masks), [](std::string_view rucksack) {
+        return bitmask(rucksack);
+    });
     auto mask = intersect(masks);
     return gsl::narrow_cast<char>(std::ranges::distance(mask.begin(), std::ranges::find(mask, true)));
 }
 
 constexpr auto sum_priorities(const std::vector<std::vector<std::string>>& groups) -> int {
-    return std::transform_reduce(groups.begin(), groups.end(), 0, std::plus(),
-                                 [](const std::vector<std::string>& group) -> int { return priority(badge(group)); });
+    return std::transform_reduce(
+        groups.begin(), groups.end(), 0, std::plus(),
+        [](const std::vector<std::string>& group) -> int { return priority(badge(group)); }
+    );
 }
 
 constexpr auto tests() -> void {

@@ -31,9 +31,7 @@ constexpr auto sum_signals(const std::vector<int>& sig) -> int {
     return sum;
 }
 
-constexpr auto tests() -> void {
-    static_assert(signal({None{}, Add{3}, Add{-5}}) == std::vector{1, 1, 1, 4, 4, -1});
-}
+constexpr auto tests() -> void { static_assert(signal({None{}, Add{3}, Add{-5}}) == std::vector{1, 1, 1, 4, 4, -1}); }
 
 auto main() -> int {
     std::vector<Op> ops;

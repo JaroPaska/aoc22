@@ -53,7 +53,9 @@ constexpr auto fewest_steps(const std::vector<std::string>& grid) -> int {
 }
 
 constexpr auto tests() -> void {
-    static_assert(find_square({"Sabqponm", "abcryxxl", "accszExk", "acctuvwj", "abdefghi"}, 'E') == std::make_pair(2, 5));
+    static_assert(
+        find_square({"Sabqponm", "abcryxxl", "accszExk", "acctuvwj", "abdefghi"}, 'E') == std::make_pair(2, 5)
+    );
     static_assert(height('S') == 0);
     static_assert(height('E') == 25);
     static_assert(height('j') == 9);

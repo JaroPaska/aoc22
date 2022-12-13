@@ -28,8 +28,10 @@ constexpr auto top_crates(const std::vector<Stack>& stacks) -> std::vector<char>
 }
 
 constexpr auto tests() -> void {
-    static_assert(rearrange({{'Z', 'N', 'D'}, {'M', 'C'}, {'P'}}, {{3, 0, 2}}) ==
-                  std::vector<Stack>{{}, {'M', 'C'}, {'P', 'Z', 'N', 'D'}});
+    static_assert(
+        rearrange({{'Z', 'N', 'D'}, {'M', 'C'}, {'P'}}, {{3, 0, 2}}) ==
+        std::vector<Stack>{{}, {'M', 'C'}, {'P', 'Z', 'N', 'D'}}
+    );
     static_assert(top_crates({{'Z', 'N'}, {'M', 'C', 'D'}, {'P'}}) == std::vector<char>{'N', 'D', 'P'});
 }
 

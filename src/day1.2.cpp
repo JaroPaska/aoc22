@@ -6,8 +6,9 @@
 
 constexpr auto most_calories(const std::vector<std::vector<int>>& elves) -> int {
     std::vector<int> sums;
-    std::ranges::transform(elves, std::back_inserter(sums),
-                           [](const std::vector<int>& elf) { return std::reduce(elf.begin(), elf.end()); });
+    std::ranges::transform(elves, std::back_inserter(sums), [](const std::vector<int>& elf) {
+        return std::reduce(elf.begin(), elf.end());
+    });
     std::ranges::partial_sort(sums, sums.begin() + 3, std::greater());
     return std::reduce(sums.begin(), sums.begin() + 3);
 }

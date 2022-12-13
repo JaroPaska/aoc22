@@ -12,7 +12,8 @@ constexpr auto overlap(const std::array<std::array<int, 2>, 2>& elf_pair) -> boo
 constexpr auto total_overlap(const std::vector<std::array<std::array<int, 2>, 2>>& elf_pairs) -> int {
     return std::transform_reduce(
         elf_pairs.begin(), elf_pairs.end(), 0, std::plus(),
-        [](const std::array<std::array<int, 2>, 2>& elf_pair) { return overlap(elf_pair); });
+        [](const std::array<std::array<int, 2>, 2>& elf_pair) { return overlap(elf_pair); }
+    );
 }
 
 constexpr auto tests() -> void {

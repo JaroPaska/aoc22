@@ -6,7 +6,8 @@
 constexpr auto most_calories(const std::vector<std::vector<int>>& elves) -> int {
     return std::transform_reduce(
         elves.begin(), elves.end(), 0, [](int a, int b) { return std::max(a, b); },
-        [](const std::vector<int>& elf) { return std::reduce(elf.begin(), elf.end()); });
+        [](const std::vector<int>& elf) { return std::reduce(elf.begin(), elf.end()); }
+    );
 }
 
 constexpr auto tests() -> void {

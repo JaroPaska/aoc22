@@ -54,17 +54,22 @@ constexpr auto round(std::vector<Monkey>&& monkeys) -> std::vector<Monkey> {
 constexpr auto monkey_business(std::vector<Monkey>&& monkeys, int rounds) -> long long {
     for (int i = 0; i < rounds; ++i)
         monkeys = round(std::move(monkeys));
-    std::ranges::partial_sort(monkeys, monkeys.begin() + 2,
-                              [](const Monkey& a, const Monkey& b) { return a.inspected > b.inspected; });
+    std::ranges::partial_sort(monkeys, monkeys.begin() + 2, [](const Monkey& a, const Monkey& b) {
+        return a.inspected > b.inspected;
+    });
     return monkeys.at(0).inspected * monkeys.at(1).inspected;
 }
 
 constexpr auto tests() -> void {
-    static_assert(monkey_business({{{79, 98}, Mul{19}, 23, {2, 3}},
-                                   {{54, 65, 75, 74}, Add{6}, 19, {2, 0}},
-                                   {{79, 60, 97}, Sq{}, 13, {1, 3}},
-                                   {{74}, Add{3}, 17, {0, 1}}},
-                                  20) == 10605);
+    static_assert(
+        monkey_business(
+            {{{79, 98}, Mul{19}, 23, {2, 3}},
+             {{54, 65, 75, 74}, Add{6}, 19, {2, 0}},
+             {{79, 60, 97}, Sq{}, 13, {1, 3}},
+             {{74}, Add{3}, 17, {0, 1}}},
+            20
+        ) == 10605
+    );
 }
 
 auto main() -> int {

@@ -15,6 +15,7 @@ constexpr auto operator<=>(const std::variant<int, List>& l, const std::variant<
 struct List {
     std::vector<std::variant<int, List>> elements;
     constexpr auto operator<=>(const List& other) const -> std::strong_ordering = default;
+
     constexpr auto operator<=>(int n) const -> std::strong_ordering { return *this <=> List{{n}}; }
 };
 
@@ -35,9 +36,7 @@ constexpr auto match_brackets(std::string_view line) -> std::vector<std::optiona
     return rb;
 }
 
-constexpr auto _isdigit(char c) -> bool {
-    return c >= '0' && c <= '9';
-}
+constexpr auto _isdigit(char c) -> bool { return c >= '0' && c <= '9'; }
 
 constexpr auto _stoi(std::string_view s) -> int {
     int result = 0, sign = 1;
@@ -84,7 +83,9 @@ constexpr auto tests() -> void {
     static_assert(_isdigit('9'));
     static_assert(!_isdigit('a'));
     static_assert(_stoi("123") == 123);
-    static_assert(match_brackets("[[]][]") == std::vector<std::optional<int>>{3, 2, std::nullopt, std::nullopt, 5, std::nullopt});
+    static_assert(
+        match_brackets("[[]][]") == std::vector<std::optional<int>>{3, 2, std::nullopt, std::nullopt, 5, std::nullopt}
+    );
     static_assert(parse("[1,1,3,1,1]") == List{{1, 1, 3, 1, 1}});
     static_assert(parse("[[[]]]") == List{{List{{List{{}}}}}});
     static_assert(parse("[1,1,3,1,1]") < parse("[1,1,5,1,1]"));

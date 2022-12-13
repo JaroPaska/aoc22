@@ -29,8 +29,10 @@ constexpr auto contains(const std::vector<T>& v, const T& x) -> bool {
     return std::ranges::find(v, x) != std::ranges::end(v);
 }
 
-constexpr auto simulate(std::span<const int> steps, const std::vector<std::pair<int, int>>& knots,
-                        std::vector<std::pair<int, int>>&& visited) -> std::vector<std::pair<int, int>> {
+constexpr auto simulate(
+    std::span<const int> steps, const std::vector<std::pair<int, int>>& knots,
+    std::vector<std::pair<int, int>>&& visited
+) -> std::vector<std::pair<int, int>> {
     if (steps.empty())
         return visited;
 

@@ -11,8 +11,8 @@ template<class T1, class T2>
 struct map {
     std::vector<std::pair<T1, T2>> vec;
 
-    constexpr auto operator[](const T1 &x) -> T2 & {
-        for (auto &[k, v]: vec)
+    constexpr auto operator[](const T1& x) -> T2& {
+        for (auto& [k, v] : vec)
             if (k == x)
                 return v;
 
@@ -58,38 +58,41 @@ constexpr auto change_dir(Path path, std::string_view where) -> Path {
 }
 
 template<class... Ts>
-struct overloaded : Ts ... {
+struct visitor : Ts... {
     using Ts::operator()...;
 };
 
-template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+template<class... Ts>
+visitor(Ts...) -> visitor<Ts...>;
 
-constexpr auto process(Path path, std::span<const Cmd> cmds, Metadata &&metadata) -> Metadata {
+constexpr auto process(Path path, std::span<const Cmd> cmds, Metadata&& metadata) -> Metadata {
     if (cmds.empty())
         return metadata;
 
-    const auto &cmd = cmds.front();
-    metadata = std::visit(overloaded{
-            [&](const Ls &ls) {
-                auto &[own_sizes, folders, _] = metadata;
-                auto &own_size = own_sizes[path];
-                auto &my_folders = folders[path];
+    const auto& cmd = cmds.front();
+    metadata = std::visit(
+        visitor{
+            [&](const Ls& ls) {
+                auto& [own_sizes, folders, _] = metadata;
+                auto& own_size = own_sizes[path];
+                auto& my_folders = folders[path];
                 own_size = 0;
                 my_folders.clear();
-                for (const auto &entry: ls.entries)
-                    std::visit(overloaded{
-                            [&](const Dir &dir) { my_folders.emplace_back(dir.name); },
-                            [&](const File &file) { own_size += file.size; }
-                    }, entry);
+                for (const auto& entry : ls.entries)
+                    std::visit(
+                        visitor{
+                            [&](const Dir& dir) { my_folders.emplace_back(dir.name); },
+                            [&](const File& file) { own_size += file.size; }},
+                        entry
+                    );
                 return process(path, cmds.subspan(1), std::move(metadata));
             },
-            [&](const Cd &cd) {
-                return process(change_dir(path, cd.where), cmds.subspan(1), std::move(metadata));
-            }
-    }, cmd);
-    auto &[own_sizes, folders, total_sizes] = metadata;
+            [&](const Cd& cd) { return process(change_dir(path, cd.where), cmds.subspan(1), std::move(metadata)); }},
+        cmd
+    );
+    auto& [own_sizes, folders, total_sizes] = metadata;
     total_sizes[path] = own_sizes[path];
-    for (const auto &folder: folders[path]) {
+    for (const auto& folder : folders[path]) {
         auto size = total_sizes[change_dir(path, folder)];
         total_sizes[path] += size;
     }
@@ -98,23 +101,26 @@ constexpr auto process(Path path, std::span<const Cmd> cmds, Metadata &&metadata
 
 static constexpr auto size_limit = 100000;
 
-constexpr auto small_dirs_size(const std::vector<Cmd> &cmds) -> int {
+constexpr auto small_dirs_size(const std::vector<Cmd>& cmds) -> int {
+    // clang-format off
     auto metadata = process({}, std::span{cmds}, Metadata{});
     auto small = metadata.total_sizes.vec
-                 | std::views::values
-                 | std::views::filter([&](int size) { return size <= size_limit; });
+                           | std::views::values
+                           | std::views::filter([&](int size) { return size <= size_limit; });
     return std::reduce(small.begin(), small.end());
+    // clang-format on
 }
 
 constexpr auto tests() -> void {
     static_assert(change_dir(Path{}, "a") == Path{"a"});
     static_assert(
-            small_dirs_size(
-                    {Cd{"/"}, Ls{{Dir{"a"}, File{14848514, "b.txt"}, File{8504156, "c.dat"}, Dir{"d"}}},
-                     Cd{"a"}, Ls{{Dir{"e"}, File{29116, "f"}, File{2557, "g"}, File{62596, "h.lst"}}},
-                     Cd{"e"}, Ls{{File{584, "i"}}}, Cd{".."}, Cd{".."}, Cd{"d"},
-                     Ls{{File{4060174, "j"}, File{8033020, "d.log"}, File{5626152, "d.ext"},
-                         File{7214296, "k"}}}}) == 95437);
+        small_dirs_size(
+            {Cd{"/"}, Ls{{Dir{"a"}, File{14848514, "b.txt"}, File{8504156, "c.dat"}, Dir{"d"}}}, Cd{"a"},
+             Ls{{Dir{"e"}, File{29116, "f"}, File{2557, "g"}, File{62596, "h.lst"}}}, Cd{"e"}, Ls{{File{584, "i"}}},
+             Cd{".."}, Cd{".."}, Cd{"d"},
+             Ls{{File{4060174, "j"}, File{8033020, "d.log"}, File{5626152, "d.ext"}, File{7214296, "k"}}}}
+        ) == 95437
+    );
 }
 
 auto main() -> int {
@@ -127,14 +133,14 @@ auto main() -> int {
                 lines.emplace_back(line);
         }
 
-        for (const auto &line: lines) {
+        for (const auto& line : lines) {
             if (line.starts_with("$")) {
                 if (line == "$ ls")
                     cmds.emplace_back(Ls{});
                 else
                     cmds.emplace_back(Cd{line.substr(5)});
             } else {
-                auto &ls = std::get<Ls>(cmds.back());
+                auto& ls = std::get<Ls>(cmds.back());
                 if (line.starts_with("dir"))
                     ls.entries.emplace_back(Dir{line.substr(4)});
                 else {
