@@ -62,9 +62,6 @@ struct visitor : Ts... {
     using Ts::operator()...;
 };
 
-template<class... Ts>
-visitor(Ts...) -> visitor<Ts...>;
-
 constexpr auto process(Path path, std::span<const Cmd> cmds, Metadata&& metadata) -> Metadata {
     if (cmds.empty())
         return metadata;
