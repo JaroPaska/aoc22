@@ -105,8 +105,8 @@ constexpr auto small_dirs_size(const std::vector<Cmd>& cmds) -> int {
     // clang-format off
     auto metadata = process({}, std::span{cmds}, Metadata{});
     auto small = metadata.total_sizes.vec
-                           | std::views::values
-                           | std::views::filter([&](int size) { return size <= size_limit; });
+               | std::views::values
+               | std::views::filter([&](int size) { return size <= size_limit; });
     return std::reduce(small.begin(), small.end());
     // clang-format on
 }

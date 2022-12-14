@@ -107,8 +107,8 @@ constexpr auto smallest_big_dir(const std::vector<Cmd>& cmds) -> int {
     auto metadata = process({}, std::span{cmds}, Metadata{});
     auto used = metadata.total_sizes[{}];
     auto small = metadata.total_sizes.vec
-                           | std::views::values
-                           | std::views::filter([&](int size) { return size >= need_unused - (total_space - used); });
+               | std::views::values
+               | std::views::filter([&](int size) { return size >= need_unused - (total_space - used); });
     return *std::ranges::min_element(small);
     // clang-format on
 }
