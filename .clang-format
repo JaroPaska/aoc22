@@ -16,6 +16,5 @@ IndentPPDirectives: None
 IndentWidth: 4
 NamespaceIndentation: None
 PointerAlignment: Left
-SeparateDefinitionBlocks: Always
 SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false

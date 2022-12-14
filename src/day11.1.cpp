@@ -8,13 +8,11 @@
 
 struct Add {
     long long y;
-
     constexpr auto operator()(long long x) -> long long { return x + y; }
 };
 
 struct Mul {
     long long y;
-
     constexpr auto operator()(long long x) -> long long { return x * y; }
 };
 

@@ -15,7 +15,6 @@ constexpr auto operator<=>(const std::variant<int, List>& l, const std::variant<
 struct List {
     std::vector<std::variant<int, List>> elements;
     constexpr auto operator<=>(const List& other) const -> std::strong_ordering = default;
-
     constexpr auto operator<=>(int n) const -> std::strong_ordering { return *this <=> List{{n}}; }
 };
 
