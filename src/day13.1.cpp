@@ -97,10 +97,8 @@ auto main() -> int {
         std::string line;
         while (std::getline(std::cin, line)) {
             auto list = parse(line);
-
             std::getline(std::cin, line);
             lists.push_back({list, parse(line)});
-
             std::getline(std::cin, line);
         }
     }
