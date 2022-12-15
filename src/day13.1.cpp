@@ -77,7 +77,7 @@ constexpr auto sum_indices(const std::vector<std::array<List, 2>>& lists) -> int
     return s;
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(_isdigit('9'));
     static_assert(!_isdigit('a'));
     static_assert(_stoi("123") == 123);

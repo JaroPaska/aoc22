@@ -37,7 +37,7 @@ constexpr auto render(const std::vector<int>& sig) -> std::vector<std::string> {
     return screen;
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(signal({None{}, Add{3}, Add{-5}}) == std::vector{1, 1, 1, 4, 4, -1});
     static_assert(_abs(-3) == 3);
 }

@@ -110,7 +110,7 @@ constexpr auto smallest_big_dir(const std::vector<Cmd>& cmds) -> int {
     // clang-format on
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(change_dir(Path{}, "a") == Path{"a"});
     static_assert(
         smallest_big_dir(

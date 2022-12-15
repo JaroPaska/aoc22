@@ -13,7 +13,7 @@ constexpr auto most_calories(const std::vector<std::vector<int>>& elves) -> int 
     return std::reduce(sums.begin(), sums.begin() + 3);
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(most_calories({{1000, 2000, 3000}, {4000}, {5000, 6000}, {7000, 8000, 9000}, {10000}}) == 45000);
 }
 

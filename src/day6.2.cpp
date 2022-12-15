@@ -17,7 +17,7 @@ constexpr auto first_marker(const std::string& buffer, int marker_length) -> int
     // clang-format on
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(!is_marker("mjqjpqmgbljsph"));
     static_assert(is_marker("qmgbljsphdztnv"));
     static_assert(first_marker("mjqjpqmgbljsphdztnvjfqwrcgsmlb", 14) == 19);

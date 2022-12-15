@@ -78,7 +78,7 @@ constexpr auto decoder_key(std::vector<List>&& lists) {
     return (p1 + 1) * (p2 + 1);
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(_isdigit('9'));
     static_assert(!_isdigit('a'));
     static_assert(_stoi("123") == 123);

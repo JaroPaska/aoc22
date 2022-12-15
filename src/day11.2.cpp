@@ -65,7 +65,7 @@ constexpr auto monkey_business(std::vector<Monkey>&& monkeys, int rounds) -> lon
     return monkeys.at(0).inspected * monkeys.at(1).inspected;
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(
         mod_product(
             {{{79, 98}, Mul{19}, 23, {2, 3}},

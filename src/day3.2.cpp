@@ -47,7 +47,7 @@ constexpr auto sum_priorities(const std::vector<std::vector<std::string>>& group
     );
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(priority('p') == 16);
     static_assert(priority('L') == 38);
     static_assert(badge({"vJrwpWtwJgWrhcsFMMfFFhFp", "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL", "PmmdzqPrVvPwwTWBwg"}) == 'r');

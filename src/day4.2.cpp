@@ -16,7 +16,7 @@ constexpr auto total_overlap(const std::vector<std::array<std::array<int, 2>, 2>
     );
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(!overlap({{{{2, 4}}, {{6, 8}}}}));
     static_assert(overlap({{{{5, 7}}, {{7, 9}}}}));
 }

@@ -27,12 +27,10 @@ constexpr auto deduce(const std::vector<std::pair<int, int>>& strategy) -> std::
 }
 
 namespace tests {
-
-static_assert(outcome({1, 0}) == Outcome::lose);
-static_assert(total_score({{0, 1}, {1, 0}, {2, 2}}) == 15);
-static_assert(deduce({{0, 1}, {1, 0}, {2, 2}}) == std::vector<std::pair<int, int>>{{0, 0}, {1, 0}, {2, 0}});
-
-} // namespace tests
+    static_assert(outcome({1, 0}) == Outcome::lose);
+    static_assert(total_score({{0, 1}, {1, 0}, {2, 2}}) == 15);
+    static_assert(deduce({{0, 1}, {1, 0}, {2, 2}}) == std::vector<std::pair<int, int>>{{0, 0}, {1, 0}, {2, 0}});
+}
 
 auto main() -> int {
     std::vector<std::pair<int, int>> strategy;

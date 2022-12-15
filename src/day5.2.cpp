@@ -27,7 +27,7 @@ constexpr auto top_crates(const std::vector<Stack>& stacks) -> std::vector<char>
     return std::vector<char>(top.begin(), top.end());
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(
         rearrange({{'Z', 'N', 'D'}, {'M', 'C'}, {'P'}}, {{3, 0, 2}}) ==
         std::vector<Stack>{{}, {'M', 'C'}, {'P', 'Z', 'N', 'D'}}

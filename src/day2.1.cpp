@@ -17,7 +17,7 @@ constexpr auto total_score(const std::vector<std::pair<int, int>>& strategy) -> 
     );
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(outcome({1, 0}) == Outcome::lose);
     static_assert(total_score({{0, 1}, {1, 0}, {2, 2}}) == 15);
 }

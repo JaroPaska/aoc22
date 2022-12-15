@@ -52,7 +52,7 @@ constexpr auto fewest_steps(const std::vector<std::string>& grid) -> int {
     return dist.at(er).at(ec).value();
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(
         find_square({"Sabqponm", "abcryxxl", "accszExk", "acctuvwj", "abdefghi"}, 'E') == std::make_pair(2, 5)
     );

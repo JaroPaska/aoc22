@@ -20,7 +20,7 @@ constexpr auto total_contained(const std::vector<std::array<std::array<int, 2>, 
     );
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(contains({1, 3}, {2, 2}) == true);
     static_assert(contains({2, 2}, {1, 3}) == false);
     static_assert(sym_contains({{{{2, 2}}, {{1, 3}}}}) == true);

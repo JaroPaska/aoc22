@@ -52,7 +52,7 @@ constexpr auto covered(const std::vector<int>& steps) -> int {
     return gsl::narrow_cast<int>(simulate(std::span{steps}, std::vector<std::pair<int, int>>(10), {{0, 0}}).size());
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(sgn(3) == 1);
     static_assert(sgn(0) == 0);
     static_assert(sgn(-1) == -1);

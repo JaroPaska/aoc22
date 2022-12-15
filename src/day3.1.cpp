@@ -26,7 +26,7 @@ constexpr auto sum_priorities(const std::vector<std::string>& rucksacks) -> int 
     });
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(priority('p') == 16);
     static_assert(duplicate("vJrwpWtwJgWrhcsFMMfFFhFp") == 'p');
     static_assert(

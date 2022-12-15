@@ -39,7 +39,7 @@ constexpr auto visible(const std::vector<std::string>& grid) -> int {
     return s;
 }
 
-constexpr auto tests() {
+namespace tests {
     static_assert(smaller_trees({"30373", "25512", "65332", "33549", "35390"}, 2, 1, 1) == 3);
     static_assert(trees({"30373", "25512", "65332", "33549", "35390"}, 2, 1) == std::array{2, 3, 2, 1});
     static_assert(visible({"30373", "25512", "65332", "33549", "35390"}) == 21);

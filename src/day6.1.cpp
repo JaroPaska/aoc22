@@ -17,7 +17,7 @@ constexpr auto first_marker(std::string_view buffer, int marker_length) -> int {
     // clang-format on
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(!is_marker("bvwb"));
     static_assert(is_marker("vwbj"));
     static_assert(first_marker("bvwbjplbgvbhsrlpgdmjqwftvncz", 4) == 5);

@@ -108,7 +108,7 @@ constexpr auto small_dirs_size(const std::vector<Cmd>& cmds) -> int {
     // clang-format on
 }
 
-constexpr auto tests() -> void {
+namespace tests {
     static_assert(change_dir(Path{}, "a") == Path{"a"});
     static_assert(
         small_dirs_size(

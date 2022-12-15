@@ -8,13 +8,13 @@ CompactNamespaces: false
 Cpp11BracedListStyle: true
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Never
-FixNamespaceComments: true
+FixNamespaceComments: false
 IncludeBlocks: Preserve
 IndentAccessModifiers: false
 IndentCaseBlocks: false
 IndentPPDirectives: None
 IndentWidth: 4
-NamespaceIndentation: None
+NamespaceIndentation: All
 PointerAlignment: Left
 SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
